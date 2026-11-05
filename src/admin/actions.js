@@ -1,9 +1,9 @@
 import { collection, deleteDoc, deleteField, doc, getDocs, increment, serverTimestamp, setDoc, Timestamp, updateDoc, writeBatch } from 'firebase/firestore'
 import { TEAM_COLORS } from '../components/teamColors'
 import { db } from '../firebase'
+import { lowestPoints } from '../logic/late'
 import { assignTables } from '../logic/tables'
 import { finalOrder, finalistPlan } from '../logic/ranking'
-import { averagePoints } from '../logic/late'
 import { resolveResult } from '../logic/scoring'
 import { DEFAULT_ROUNDS } from '../logic/flow'
 import { firstName } from '../firstName'
@@ -85,12 +85,16 @@ export async function saveScore(sid, key, entries, winnerId, old, participants =
 export async function finish(session, teams, players, scores = {}) {
   const ranked = finalOrder(teams.filter((t) => t.members?.length))
   const { winners, participation } = summarize(scores, teams, players)
+  const credit = (teamId) => {
+    const t = teams.find((x) => x.id === teamId)
+    return (t?.points ?? 0) + (t?.finalAward ?? 0)
+  }
   const b = writeBatch(db)
   b.set(doc(db, 'pastSessions', session.id), {
     name: session.name,
     date: session.date,
     standings: ranked.map((t) => ({ name: t.name, points: t.points, finalAward: t.finalAward ?? null, colorIndex: t.colorIndex, members: t.members })),
-    players: players.map((p) => ({ name: firstName(p.name), points: (() => { const t = teams.find((x) => x.id === p.teamId); return (t?.points ?? 0) + (t?.finalAward ?? 0) })() })),
+    players: players.map((p) => ({ name: firstName(p.name), points: credit(p.teamId) })),
     winners: winners.map((w) => ({ round: w.round, table: w.table, team: w.team, members: w.members, points: w.points })),
     participation: participation.map((p) => ({ name: firstName(p.name), team: p.team, played: p.rounds.length })),
     finishedAt: serverTimestamp(),
@@ -165,8 +169,7 @@ export async function addTeam(sid, teams, started) {
   const number = Math.max(0, ...teams.map((t) => t.number)) + 1
   const colorIndex = (number - 1) % TEAM_COLORS.length
   const name = `${TEAM_COLORS[colorIndex].name} ${number}`
-  const points = started ? averagePoints(teams) : 0
-  await setDoc(sref(sid, 'teams', `t${number}`), { number, name, colorIndex, size: 0, points })
+  await setDoc(sref(sid, 'teams', `t${number}`), { number, name, colorIndex, size: 0, points: started ? lowestPoints(teams) : 0 })
   return name
 }
 

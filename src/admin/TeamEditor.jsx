@@ -74,7 +74,7 @@ export default function TeamEditor({ sid, mode, teams, players, toast, canAddTea
       run(() => removePlayer(sid, p), `${p.name} left Team ${t.name}, now ${count(t) - 1} players`)
   }
 
-  const newTeam = () => run(async () => { await addTeam(sid, teams, started) }, started ? `Team added with the average score, now ${teams.length + 1} teams` : `Team added, now ${teams.length + 1} teams`)
+  const newTeam = () => run(async () => { await addTeam(sid, teams, started) }, started ? `Team added with the lowest team's score, now ${teams.length + 1} teams` : `Team added, now ${teams.length + 1} teams`)
 
   return (
     <div>

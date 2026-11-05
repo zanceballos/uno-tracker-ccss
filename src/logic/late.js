@@ -5,5 +5,8 @@ export function pickSeat(tables, scored) {
     .sort((a, b) => a.scored - b.scored || a.n - b.n)[0] ?? null
 }
 
-export const averagePoints = (teams) =>
-  teams.length ? Math.round(teams.reduce((a, t) => a + t.points, 0) / teams.length) : 0
+// A team opened mid-game starts level with the lowest-scoring team that has players.
+export const lowestPoints = (teams) => {
+  const live = teams.filter((t) => t.members?.length)
+  return live.length ? Math.min(...live.map((t) => t.points ?? 0)) : 0
+}

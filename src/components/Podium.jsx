@@ -2,9 +2,9 @@ import NameList from './NameList'
 import TeamBadge from './TeamBadge'
 
 const STYLES = [
-  { label: '1st', icon: '👑', block: 'bg-yellow-400', h: 'h-28', order: 'order-2' },
-  { label: '2nd', icon: '🥈', block: 'bg-gray-300', h: 'h-20', order: 'order-1' },
-  { label: '3rd', icon: '🥉', block: 'bg-amber-600', h: 'h-14', order: 'order-3' },
+  { label: '1st', icon: '👑', block: 'bg-yellow-400', h: 'h-32 lg:h-44', order: 'order-2' },
+  { label: '2nd', icon: '🥈', block: 'bg-gray-300', h: 'h-28 lg:h-36', order: 'order-1' },
+  { label: '3rd', icon: '🥉', block: 'bg-amber-600', h: 'h-24 lg:h-32', order: 'order-3' },
 ]
 
 export default function Podium({ items, date, onSelect }) {
@@ -19,14 +19,14 @@ export default function Podium({ items, date, onSelect }) {
             <li key={t.name} className={`flex min-w-0 flex-1 flex-col items-center ${s.order}`}>
               <Tag type={onSelect ? 'button' : undefined} onClick={onSelect ? () => onSelect(t) : undefined} className="flex w-full min-w-0 flex-col items-center text-center">
                 <span aria-hidden className={i === 0 ? 'text-4xl' : 'text-3xl'}>{s.icon}</span>
-                <TeamBadge colorIndex={t.colorIndex} name={t.name} className="text-xs sm:text-sm lg:text-3xl" />
-                {t.members?.length > 0 && <NameList team={t} center className="mt-1 text-xs font-semibold text-white/90 sm:text-sm lg:text-2xl" />}
+                {t.members?.length > 0 && <NameList team={t} center className="text-sm font-extrabold sm:text-base lg:text-3xl" />}
+                <TeamBadge colorIndex={t.colorIndex} name={t.name} className="mt-1 text-[11px] sm:text-xs lg:text-base" />
                 {t.sub && <span className="mt-0.5 w-full break-words text-xs font-bold text-uno-yellow">{t.sub}</span>}
               </Tag>
               <div className={`mt-1 flex w-full ${s.h} flex-col items-center justify-center rounded-t-2xl border-4 border-b-0 border-white ${s.block} text-uno-black ${t.highlight ? 'ring-4 ring-white ring-offset-2 ring-offset-uno-black' : ''}`}>
-                <span className="text-sm font-extrabold lg:text-3xl">{s.label}</span>
+                <span className="text-sm font-extrabold lg:text-2xl">{s.label}</span>
                 <span className="text-3xl font-extrabold leading-none tabular-nums lg:text-5xl">{t.points}</span>
-                <span className="text-xs font-bold">pts</span>
+                <span className="text-xs font-bold lg:text-base">pts</span>
               </div>
             </li>
           )
