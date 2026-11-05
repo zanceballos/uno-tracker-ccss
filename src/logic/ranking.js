@@ -44,3 +44,20 @@ export function finalOrder(teams) {
   return [...teams].sort((a, b) =>
     (has(b) - has(a)) || (has(a) ? b.finalAward - a.finalAward || c(a.finalCards) - c(b.finalCards) : b.points - a.points))
 }
+
+// Bullet points explaining a tie at the finalist cut (admin page). null = no tie at the cut.
+export function finalistNote(session, teams, scores, n = 3) {
+  const ranked = rankLeague(teams.filter((t) => t.members?.length), lastCardsOf(session, scores))
+  if (ranked.length <= n || ranked[n - 1].points !== ranked[n].points) return null
+  const level = ranked.filter((t) => t.points === ranked[n - 1].points)
+  const cards = (t) => (Number.isFinite(t.cards) ? `${t.cards} card${t.cards === 1 ? '' : 's'} left` : 'no cards recorded')
+  const head = `${level.map((t) => t.name).join(', ')} are level on ${ranked[n - 1].points} points.`
+  if (cmp(ranked[n - 1], ranked[n]) === 0) {
+    return [head, 'They also have the same cards left in the last round.', scores.playoff_0 ? 'A play-off game decided the last finalist spot.' : 'A play-off game decides the last finalist spot.']
+  }
+  return [
+    head,
+    'The team with fewer cards left in the last round goes through.',
+    ...level.map((t) => `${t.name}: ${cards(t)} → ${ranked.indexOf(t) < n ? 'goes to the final' : 'misses out'}`),
+  ]
+}

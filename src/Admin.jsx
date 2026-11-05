@@ -7,7 +7,7 @@ import AdminLogin from './admin/AdminLogin'
 import RoundGuide from './admin/RoundGuide'
 import SessionPicker from './admin/SessionPicker'
 import { pickSeat } from './logic/late'
-import { finalistPlan, nextInLine } from './logic/ranking'
+import { finalistNote, finalistPlan, nextInLine } from './logic/ranking'
 import PointsEditor from './admin/PointsEditor'
 import TeamEditor from './admin/TeamEditor'
 import { ROUND_SECONDS, advance, createSession, finish, endRound, goBack, resetAll, saveScore, seatTeam, setPlayersPerTeam, setRounds, setSeating, startTimer, undoScore } from './admin/actions'
@@ -269,7 +269,12 @@ export default function Admin() {
                 </div>
               )}
               {round && left != null && <Section title="Round timer"><TimerBar secondsLeft={left} totalSeconds={ROUND_SECONDS} /><div className="mt-3 flex flex-wrap gap-2"><Button variant="ghost" onClick={restartT}>Restart timer</Button>{left > 0 && <Button variant="ghost" onClick={endT}>End round early</Button>}</div></Section>}
-              {lastRound && plan.state === 'needsPlayoff' && <Alert>Tie for a finalist spot: {plan.tie.teams.map((t) => t.name).join(', ')}. A play-off game decides it.</Alert>}
+              {((lastRound && left === 0) || status === 'playoff' || status === 'final') && finalistNote(session, teams, scores) && (
+                <div role="status" className="rounded-xl border border-uno-yellow/60 bg-uno-yellow/10 px-4 py-3">
+                  <p className="font-extrabold">📣 Tie for a finalist spot</p>
+                  <ul className="mt-1 list-disc space-y-0.5 pl-5 font-semibold">{finalistNote(session, teams, scores).map((l) => <li key={l}>{l}</li>)}</ul>
+                </div>
+              )}
               {players.length > 20 && <Alert>{players.length} players: add a casual volunteer-led table for anyone who doesn't want to compete.</Alert>}
               {teams.length > 9 && <Alert>{teams.length} teams: add a casual non-scoring table (only 9 teams can be seated).</Alert>}
               {empty.length > 0 && ['closed', 'round1', 'round2', 'round3'].includes(status) && <Alert>{empty.map((t) => t.name).join(', ')} {empty.length > 1 ? 'have' : 'has'} no players and will be skipped when seating the next round.</Alert>}
