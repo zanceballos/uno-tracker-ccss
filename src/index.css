@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Fredoka:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-uno-red: #ED1C24;
+  --color-uno-yellow: #FFDE00;
+  --color-uno-green: #00A651;
+  --color-uno-blue: #0072BC;
+  --color-uno-black: #111111;
+  --color-uno-orange: #FF7A00;
+  --color-uno-purple: #7B2CBF;
+  --color-uno-pink: #FF5FA8;
+  --color-uno-teal: #19C3B0;
+  --color-uno-silver: #B8BFCC;
+  --color-uno-charcoal: #1a1a1d;
+  --font-display: "Baloo 2", "Fredoka", system-ui, sans-serif;
+  --animate-live-pulse: live-pulse 1.6s ease-in-out infinite;
+
+  @keyframes live-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+}
+
+@layer base {
+  body {
+    margin: 0;
+    background: var(--color-uno-black);
+    color: #fff;
+    font-family: var(--font-display);
+    overflow-x: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
