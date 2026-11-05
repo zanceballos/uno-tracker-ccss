@@ -13,9 +13,6 @@ const ITEMS = {
   ],
   organiser: [
     { to: '/admin', icon: '📋', label: 'Dashboard', short: 'Home' },
-    { to: '/admin#sessions', icon: '🗂️', label: 'Sessions', short: 'Sessions' },
-    { to: '/admin#teams', icon: '👥', label: 'Players and Teams', short: 'Teams' },
-    { to: '/admin#round', icon: '🃏', label: 'Live Round', short: 'Round' },
     { to: '/leaderboards', icon: '🏆', label: 'Leaderboards', short: 'Scores' },
   ],
 }

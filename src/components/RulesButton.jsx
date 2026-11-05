@@ -6,7 +6,7 @@ const SECTIONS = [
   { icon: '🎯', title: 'The goal', items: ['Win points in every round.', 'The best teams play the final.', 'Nobody is knocked out early!'] },
   { icon: '🃏', title: 'Each round', items: ['Sit at your table. Check your phone for the number.', 'Everyone gets 7 cards. Normal UNO rules.', 'The round ends when someone has no cards left.', 'Maximum 15 minutes.'] },
   { icon: '⏱️', title: 'Turn rules', items: ['Each turn lasts 10 seconds.', 'Too slow? Draw 1 card and your turn is skipped.', 'Put a card down by mistake, like when it is not your turn? Draw 1 card as a penalty. Then play carries on.'] },
-  { icon: '⭐', title: 'Points', items: ['🥇 Team that goes out first: 3 points', '🥈 Fewest cards left (the others): 2 points', '🥉 Everyone else: 1 point', 'Time ran out? Fewest cards wins.'] },
+  { icon: '⭐', title: 'Points', items: ['🥇 Team that goes out first: 3 points', '🥈 Fewest cards left (the others): 2 points', '🥉 Everyone else: 1 point', 'Time ran out and nobody went out? Fewest cards gets 2 points, the others get 1.'] },
   { icon: '🏆', title: 'The final', items: ['The top 3 teams play one last game.', 'Tied for a spot? A quick play-off decides.', 'The final winner takes the title!'] },
   { icon: '👥', title: 'Team changes', items: ['New players join the smallest team (max 4).', 'Someone leaves? Your team plays on, or joins another team.'] },
   { icon: '🤝', title: 'Not sure about a rule?', items: ['Ask your table helper.', 'Still unsure? The floater decides.', 'No rule for it? Replay the turn.', 'Good sports win a prize too!'] },

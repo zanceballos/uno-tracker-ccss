@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { doc, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore'
 import Button from '../components/Button'
 import LeaveTeam from '../components/LeaveTeam'
+import TeamBadge from '../components/TeamBadge'
 import { teamColor } from '../components/teamColors'
 import { useApp, useConfirm } from '../context'
 import { leaveTeam } from '../leaveTeam'
@@ -110,8 +111,8 @@ export default function Join() {
               className={`flex w-full items-start gap-3 rounded-xl border-2 p-4 text-left lg:gap-4 lg:p-5 transition active:scale-95 disabled:opacity-50 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.7)] ${c.bg} ${sel ? 'border-white ring-4 ring-white' : 'border-white/60'}`}>
               <span className="flex size-11 shrink-0 items-center justify-center rounded-md border-2 border-current text-xl font-extrabold lg:size-16 lg:text-4xl">{c.letter}</span>
               <span className="min-w-0 flex-1">
-                <span className="flex justify-between gap-2 text-xl font-extrabold lg:text-4xl"><span>{t.name}</span><span>{full ? 'Full' : `${n}/4`}</span></span>
-                <span className="block text-base font-semibold lg:text-2xl">{n ? t.members.join(', ') : 'No players yet'}</span>
+                <span className="flex items-center justify-between gap-2 text-lg font-extrabold lg:text-3xl"><TeamBadge name={t.name} className="min-w-0" /><span className="shrink-0">{full ? 'Full' : `${n}/4`}</span></span>
+                <span className="mt-1 block text-base font-semibold lg:text-2xl">{n ? t.members.join(', ') : 'No players yet'}</span>
               </span>
             </button>
           )

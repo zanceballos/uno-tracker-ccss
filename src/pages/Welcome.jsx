@@ -8,6 +8,7 @@ import TeamDetails from '../components/TeamDetails'
 import Podium from '../components/Podium'
 import { WILD_BG, teamColor } from '../components/teamColors'
 import NameList from '../components/NameList'
+import TeamBadge from '../components/TeamBadge'
 import { useApp } from '../context'
 import usePast from '../hooks/usePast'
 
@@ -56,7 +57,7 @@ export function HallOfFame({ past, onSelect }) {
       <button type="button" onClick={() => onSelect(best)} className="w-full rounded-3xl border-4 border-white bg-yellow-400 p-4 text-center text-uno-black transition active:scale-[0.99]">
         <span className="block text-sm font-bold uppercase tracking-widest">Best team overall</span>
         <span className="block break-words text-2xl font-extrabold">{names(best)}</span>
-        {best.members?.length > 0 && <span className="block font-semibold">{best.name}</span>}
+        {best.members?.length > 0 && <TeamBadge colorIndex={best.colorIndex} name={best.name} className="mt-1 text-base" />}
         <span className="mt-1 block font-bold">{best.points} points · {best.session} · {fmtDate(best.date)}</span>
       </button>
       {rest.length > 0 && (
@@ -70,7 +71,7 @@ export function HallOfFame({ past, onSelect }) {
                     <span className="break-words">{MEDAL[i + 1] ?? `${i + 2}.`} {names(w)}</span>
                     <span className="shrink-0 tabular-nums">{w.points} pts</span>
                   </span>
-                  {w.members?.length > 0 && <span className="block text-sm text-white/80">{w.name}</span>}
+                  {w.members?.length > 0 && <TeamBadge colorIndex={w.colorIndex} name={w.name} className="mt-1 text-sm" />}
                   <span className="block text-xs text-white/60">{w.session} · {fmtDate(w.date)}</span>
                 </button>
               </li>
@@ -110,7 +111,7 @@ export function PastBoards({ past, onSelect }) {
                     <li key={t.name}>
                       <button type="button" onClick={() => show(s)(t)} className="w-full rounded-lg px-2 py-1 text-left hover:bg-white/5">
                         <span className="flex justify-between gap-2"><span className="flex min-w-0 gap-2"><span>{i + 4}.</span><NameList team={t} /></span><b className="shrink-0 tabular-nums">{t.points}</b></span>
-                        {t.members?.length > 0 && <span className="block pl-5 text-sm text-white/80">{t.name}</span>}
+                        {t.members?.length > 0 && <span className="block pl-5"><TeamBadge colorIndex={t.colorIndex} name={t.name} className="mt-0.5 text-xs" /></span>}
                       </button>
                     </li>
                   ))}

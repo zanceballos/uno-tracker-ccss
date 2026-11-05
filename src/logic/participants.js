@@ -35,8 +35,9 @@ export function summarize(scores, teams, players) {
   const byTeam = Object.fromEntries(teams.map((t) => [t.id, t]))
   const keys = Object.keys(scores).sort((a, b) => order(a) - order(b))
   const winners = keys.map((k) => {
-    const t = byTeam[scores[k].winnerId]
-    return { key: k, round: roundLabel(k), table: Number(k.split('_')[1]) + 1, team: t?.name ?? '?', members: t?.members ?? [], points: scores[k].award?.[scores[k].winnerId] ?? 0 }
+    const ids = scores[k].leaders?.length ? scores[k].leaders : [scores[k].winnerId]
+    const ts = ids.map((id) => byTeam[id]).filter(Boolean)
+    return { key: k, round: roundLabel(k), table: Number(k.split('_')[1]) + 1, team: ts.map((t) => t.name).join(' & ') || '?', members: ts.flatMap((t) => t.members ?? []), points: scores[k].award?.[ids[0]] ?? 0 }
   })
   const played = {}
   for (const k of keys) for (const ids of Object.values(scores[k].participants ?? {})) for (const id of ids) (played[id] ??= []).push(roundLabel(k))

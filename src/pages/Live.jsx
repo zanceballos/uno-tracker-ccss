@@ -6,6 +6,7 @@ import TeamCard from '../components/TeamCard'
 import TimerBar from '../components/TimerBar'
 import { teamColor } from '../components/teamColors'
 import NameList from '../components/NameList'
+import TeamBadge from '../components/TeamBadge'
 import { useApp } from '../context'
 import useCountdownTo from '../hooks/useCountdownTo'
 import useOnline from '../hooks/useOnline'
@@ -59,9 +60,12 @@ export default function Live() {
                 if (!tm) return null
                 const c = teamColor(tm.colorIndex)
                 return (
-                  <li key={id} className={`rounded-xl px-3 py-2 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.7)] lg:px-4 lg:py-3 lg:text-3xl ${c.bg}`}>
-                    <div className="flex justify-between gap-2 font-extrabold"><NameList team={tm} className="font-extrabold" /><span className="shrink-0 tabular-nums">{tm.points} pts</span></div>
-                    <p className="text-sm font-semibold lg:text-2xl">{c.letter} · {tm.name}</p>
+                  <li key={id} className={`rounded-xl px-3 py-2 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.7)] lg:px-4 lg:py-3 ${c.bg}`}>
+                    <div className="flex items-center justify-between gap-2">
+                      <TeamBadge colorIndex={tm.colorIndex} name={tm.name} className="min-w-0 text-base lg:text-3xl" />
+                      <span className="shrink-0 text-lg font-extrabold tabular-nums lg:text-3xl">{tm.points} pts</span>
+                    </div>
+                    <NameList team={tm} className="mt-2 text-base font-semibold lg:text-2xl" />
                   </li>
                 )
               })}

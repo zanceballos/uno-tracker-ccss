@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { setRole } from './role'
 import { signOut } from 'firebase/auth'
 import { collection, onSnapshot } from 'firebase/firestore'
 import AdminLogin from './admin/AdminLogin'
@@ -19,7 +20,6 @@ import { prereqs, previousStatus, ready } from './logic/guard'
 import Button from './components/Button'
 import Modal from './components/Modal'
 import Backdrop from './components/Backdrop'
-import NavBar from './components/NavBar'
 import RoundEndedModal from './components/RoundEndedModal'
 import RulesButton from './components/RulesButton'
 import Select from './components/Select'
@@ -79,6 +79,7 @@ function NewSession({ toast, onDone }) {
 export default function Admin() {
   const { user, isAdmin, loading, session, teams, players } = useApp()
   const confirm = useConfirm()
+  const navigate = useNavigate()
   const online = useOnline()
   const [toast, setToast] = useState('')
   const [scores, setScores] = useState({})
@@ -91,15 +92,6 @@ export default function Admin() {
     if (!sid || !isAdmin) return
     return onSnapshot(collection(db, 'sessions', sid, 'scores'), (q) => setScores(Object.fromEntries(q.docs.map((d) => [d.id, d.data()]))))
   }, [sid, isAdmin])
-
-  const { hash } = useLocation()
-  useEffect(() => {
-    if (!isAdmin) return
-    const el = document.getElementById(hash.slice(1)) ?? (hash === '#round' ? document.getElementById('next') : null)
-    if (!el) return window.scrollTo({ top: 0, behavior: 'smooth' })
-    if (el.tagName === 'DETAILS') el.open = true
-    el.scrollIntoView({ behavior: 'smooth' })
-  }, [hash, isAdmin])
 
   if (loading) return <p className="p-6 text-center">Loading…</p>
   if (!user || user.isAnonymous) return <AdminLogin />
@@ -220,10 +212,11 @@ export default function Admin() {
             </div>
           </div>
           <div className="flex shrink-0 gap-2">
+            <Link to="/leaderboards" className="inline-flex min-h-12 items-center rounded-full border border-white/30 px-4 font-bold hover:bg-white/10">🏆<span className="ml-1 hidden sm:inline">Leaderboards</span></Link>
+            <button onClick={async () => { await signOut(auth); setRole(null); navigate('/') }} className="min-h-12 rounded-full border border-white/30 px-4 font-bold hover:bg-white/10 active:scale-95">Log out</button>
           </div>
         </div>
       </header>
-      <NavBar role="organiser" />
 
       {!online && (
         <div role="alert" className="relative border-b border-uno-yellow/60 bg-uno-yellow/10 px-3 py-2 text-center font-semibold">
@@ -243,7 +236,7 @@ export default function Admin() {
       )}
     </Section>
       </div>
-      <div className="relative mx-auto grid max-w-6xl gap-4 px-3 pb-28 pt-4 md:pb-12 lg:grid-cols-[22rem_1fr] lg:items-start">
+      <div className="relative mx-auto grid max-w-6xl gap-4 px-3 pb-12 pt-4 lg:grid-cols-[22rem_1fr] lg:items-start">
         <div className="flex flex-col gap-4 lg:col-start-1 lg:row-start-1">
           {session && (
             <>

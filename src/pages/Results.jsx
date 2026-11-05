@@ -3,6 +3,7 @@ import TeamCard from '../components/TeamCard'
 import { WILD_BG } from '../components/teamColors'
 import { useApp } from '../context'
 import NameList from '../components/NameList'
+import TeamBadge from '../components/TeamBadge'
 import { finalOrder } from '../logic/ranking'
 import { fmtDate } from '../fmtDate'
 
@@ -19,7 +20,7 @@ export default function Results() {
               <p aria-hidden className="text-6xl">🏆</p>
               <p className="text-sm font-bold uppercase tracking-widest">Winner</p>
               <NameList team={ranked[0]} center className="text-2xl font-extrabold" />
-              <p>{ranked[0].members.length ? ranked[0].name : ''}</p>
+              {ranked[0].members.length > 0 && <TeamBadge colorIndex={ranked[0].colorIndex} name={ranked[0].name} className="mt-2 text-lg" />}
               <p className="mt-2 text-sm text-white/80">{session?.name} · {fmtDate(session?.date)}</p>
             </div>
           </div>

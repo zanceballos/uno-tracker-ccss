@@ -8,7 +8,7 @@ const SCORING = [
   'The team whose player goes out first scores 3 points.',
   'Among the other teams at that table, the team with the fewest cards left across its members scores 2 points.',
   'Any remaining team scores 1 point.',
-  'If the 15 minutes run out, the player with the fewest cards counts as the winner.',
+  'If the 15 minutes run out and nobody went out, the team with the fewest cards left scores 2 points (teams tied on the fewest each score 2) and every other team scores 1 point.',
   'Total points over the scored rounds decide the finalists. Ties are broken by the fewest cards left in the last round. If teams are still tied for a finalist place, a play-off game decides it.',
   'The top 3 teams play the final. The winner of the final takes the title.',
 ]

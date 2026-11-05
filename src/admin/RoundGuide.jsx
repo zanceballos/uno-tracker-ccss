@@ -14,7 +14,7 @@ const STEPS = {
     'Facilitators watch the 10-second turns and apply the penalties.',
     'Settle disputes with the rules sheet. The floater makes the final call.',
     'The round ends when a player has no cards left, or after 15 minutes.',
-    'Time up? Count the cards. The fewest wins the round.',
+    'Time up? Count the cards. The fewest gets 2 points, the others 1.',
     'A walk-in arrives or someone leaves? Use Teams & players.',
   ],
   score: [

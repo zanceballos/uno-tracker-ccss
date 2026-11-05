@@ -67,7 +67,7 @@ export default function TableCard({ index, teams, saved, onSave, onUndo, players
         })}
       </div>
       <p className="mt-2 text-sm text-white/70">Type the cards left for each team. Tick "Went out" only if a team played all its cards.</p>
-      {res.ok && <p className="mt-1 text-sm font-bold text-uno-green">Winner: {teams.find((t) => t.id === res.winnerId)?.name}{winner ? '' : ' (fewest cards)'}</p>}
+      {res.ok && <p className="mt-1 text-sm font-bold text-uno-green">{res.outId ? 'Went out: ' : 'Time up. Most points (2): '}{res.leaders.map((id) => teams.find((t) => t.id === id)?.name).join(' & ')}</p>}
       {err && <p role="alert" className="mt-2 text-sm font-semibold text-uno-yellow">{err}</p>}
       <Button type="submit" className="mt-3 w-full">{saved ? 'Update score' : 'Save score'}</Button>
       {saved && onUndo && <Button type="button" variant="ghost" className="mt-2 w-full" onClick={onUndo}>Undo this score</Button>}

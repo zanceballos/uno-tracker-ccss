@@ -1,4 +1,5 @@
 import NameList from './NameList'
+import TeamBadge from './TeamBadge'
 import RankBadge from './RankBadge'
 import { teamColor } from './teamColors'
 
@@ -12,13 +13,12 @@ export default function TeamCard({ team, rank, colorIndex, highlight, table, ros
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="text-lg font-extrabold lg:text-3xl"><NameList team={team} /></h3>
-          <p className="text-sm font-semibold lg:text-2xl">{team.members?.length ? team.name : 'No players yet'}</p>
-          {highlight && table != null && <p className="mt-1 inline-block rounded-full bg-uno-black px-3 py-0.5 text-sm font-bold text-white lg:text-2xl">Table {table}</p>}
+          <TeamBadge colorIndex={colorIndex} name={team.name} className="text-lg lg:text-3xl" />
+          {team.members?.length
+            ? <NameList team={team} className="mt-2 text-base font-semibold lg:text-2xl" />
+            : <p className="mt-2 text-base font-semibold lg:text-2xl">No players yet</p>}
         </div>
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-md border-2 border-current text-sm font-extrabold lg:size-12 lg:text-2xl" title={c.name}>
-          {c.letter}
-        </span>
+        {highlight && table != null && <p className="shrink-0 rounded-full bg-uno-black px-3 py-0.5 text-sm font-bold text-white lg:text-2xl">Table {table}</p>}
       </div>
       {roster ? (
         <p className="mt-2 text-sm font-bold">{team.members.length}/4 players</p>

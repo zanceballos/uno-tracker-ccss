@@ -61,13 +61,14 @@ export const setPlayersPerTeam = (sid, n) => updateDoc(sref(sid), { 'format.play
 
 export const setRounds = (sid, rounds) => updateDoc(sref(sid), { rounds })
 
-// winnerId is optional: if no one is picked, the team with 0 / fewest cards wins. participants: { teamId: [playerId] }.
+// winnerId (went out first) is optional: with no one out, the fewest cards gets 2 points and the rest 1. participants: { teamId: [playerId] }.
 export async function saveScore(sid, key, entries, winnerId, old, participants = null) {
   const res = resolveResult(entries, winnerId || null)
   if (!res.ok) throw new Error(res.error)
   const { award } = res
   entries = res.entries
   winnerId = res.winnerId
+  const { leaders, outId } = res
   const b = writeBatch(db)
   for (const e of entries) {
     if (/^\d_/.test(key)) {
@@ -77,7 +78,7 @@ export async function saveScore(sid, key, entries, winnerId, old, participants =
       b.update(sref(sid, 'teams', e.id), { finalAward: award[e.id], finalCards: e.cards })
     }
   }
-  b.set(sref(sid, 'scores', key), { award, winnerId, cards: Object.fromEntries(entries.map((e) => [e.id, e.cards])), ...(participants ? { participants } : {}) })
+  b.set(sref(sid, 'scores', key), { award, winnerId, leaders, wentOut: !!outId, cards: Object.fromEntries(entries.map((e) => [e.id, e.cards])), ...(participants ? { participants } : {}) })
   await b.commit()
 }
 
