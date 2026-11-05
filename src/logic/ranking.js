@@ -13,10 +13,20 @@ export function findCut(ranked, n = 3) {
   return { finalists: above, tie: { teams: ranked.filter((t) => cmp(t, edge) === 0), spots: n - above.length } }
 }
 
-export function finalistPlan(session, teams, scores, n = 3) {
+function lastCardsOf(session, scores) {
   const last = String(session?.rounds ?? 3)
   const lastCards = {}
   for (const [k, v] of Object.entries(scores)) if (k.startsWith(`${last}_`)) Object.assign(lastCards, v.cards ?? {})
+  return lastCards
+}
+
+// Best-ranked team (with players) that isn't in `taken`. Used when a finalist team leaves: the next one steps in.
+export function nextInLine(session, teams, scores, taken) {
+  return rankLeague(teams.filter((t) => t.members?.length), lastCardsOf(session, scores)).find((t) => !taken.has(t.id)) ?? null
+}
+
+export function finalistPlan(session, teams, scores, n = 3) {
+  const lastCards = lastCardsOf(session, scores)
   const { finalists, tie } = findCut(rankLeague(teams.filter((t) => t.members?.length), lastCards), n)
   if (!tie) return { finalists, tie: null, state: 'clear' }
   if (tie.teams.length > 3) return { finalists, tie, state: 'blocked' }

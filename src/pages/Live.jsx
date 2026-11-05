@@ -20,7 +20,7 @@ export default function Live() {
   const round = stage === 'final' || stage === 'playoff' ? stage : stage.replace('round', '')
   const tables = session.seating?.[round] ?? []
   const tableOf = (id) => tables.findIndex((t) => t.teams.includes(id)) + 1 || null
-  const ranked = [...teams].sort((a, b) => b.points - a.points)
+  const ranked = teams.filter((t) => t.members.length).sort((a, b) => b.points - a.points)
   const term = q.trim().toLowerCase()
   const byId = Object.fromEntries(teams.map((t) => [t.id, t]))
   const myTable = myTeam && tableOf(myTeam.id)
@@ -57,7 +57,7 @@ export default function Live() {
             <ul className="flex flex-col gap-1.5 lg:gap-2.5">
               {t.teams.map((id) => {
                 const tm = byId[id]
-                if (!tm) return null
+                if (!tm?.members.length) return null
                 const c = teamColor(tm.colorIndex)
                 return (
                   <li key={id} className={`rounded-xl px-3 py-2 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.7)] lg:px-4 lg:py-3 ${c.bg}`}>

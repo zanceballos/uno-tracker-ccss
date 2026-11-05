@@ -83,7 +83,7 @@ export async function saveScore(sid, key, entries, winnerId, old, participants =
 }
 
 export async function finish(session, teams, players, scores = {}) {
-  const ranked = finalOrder(teams)
+  const ranked = finalOrder(teams.filter((t) => t.members?.length))
   const { winners, participation } = summarize(scores, teams, players)
   const b = writeBatch(db)
   b.set(doc(db, 'pastSessions', session.id), {

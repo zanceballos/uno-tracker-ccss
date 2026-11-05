@@ -7,7 +7,7 @@ import AdminLogin from './admin/AdminLogin'
 import RoundGuide from './admin/RoundGuide'
 import SessionPicker from './admin/SessionPicker'
 import { pickSeat } from './logic/late'
-import { finalistPlan } from './logic/ranking'
+import { finalistPlan, nextInLine } from './logic/ranking'
 import PointsEditor from './admin/PointsEditor'
 import TeamEditor from './admin/TeamEditor'
 import { ROUND_SECONDS, advance, createSession, finish, endRound, goBack, resetAll, saveScore, seatTeam, setPlayersPerTeam, setRounds, setSeating, startTimer, undoScore } from './admin/actions'
@@ -112,7 +112,7 @@ export default function Admin() {
   const late = round && round !== 'final' && round !== 'playoff' ? teams.filter((t) => t.members.length && !seated.has(t.id)) : []
   const empty = teams.filter((t) => !t.members.length)
   const inPlay = round && round !== 'final'
-  const dropped = inPlay ? empty.filter((t) => seated.has(t.id)) : []
+  const dropped = round ? empty.filter((t) => seated.has(t.id)) : []
   const scoredAt = tables.map((_, j) => scores[`${round}_${j}`])
   const lonely = inPlay ? tables.map((t, i) => ({ i, t })).filter(({ t }) => t.teams.length === 1 && !dropped.some((d) => d.id === t.teams[0])) : []
   const perTeam = session?.format?.playersPerTeam ?? DEFAULT_PER_TEAM
@@ -275,13 +275,13 @@ export default function Admin() {
               {empty.length > 0 && ['closed', 'round1', 'round2', 'round3'].includes(status) && <Alert>{empty.map((t) => t.name).join(', ')} {empty.length > 1 ? 'have' : 'has'} no players and will be skipped when seating the next round.</Alert>}
               {dropped.map((t) => {
                 const at = tables.findIndex((x) => x.teams.includes(t.id))
-                const sub = late[0]
+                const sub = round === 'final' ? nextInLine(session, teams, scores, seated) : late[0]
                 const apply = (next, msg) => setSeating(session, round, next).then(() => setToast(msg)).catch(() => setToast('Could not update the table'))
                 return (
                   <Alert key={t.id} action={sub
                     ? <Button onClick={() => apply(tables.map((x, k) => (k === at ? { teams: x.teams.map((id) => (id === t.id ? sub.id : id)) } : x)), `Team ${sub.name} takes Table ${at + 1}`)}>Replace with {sub.name}</Button>
                     : <Button onClick={() => apply(tables.map((x, k) => (k === at ? { teams: x.teams.filter((id) => id !== t.id) } : x)), `Team ${t.name} removed from Table ${at + 1}`)}>Remove from Table {at + 1}</Button>}>
-                    Team {t.name} has no players left (Table {at + 1}). {sub ? `${sub.name} is waiting and can take their place.` : 'No team is waiting to replace them.'}
+                    Team {t.name} has no players left (Table {at + 1}). {sub ? `${sub.name} is next in line and can take their place.` : 'No team is waiting to replace them.'}
                   </Alert>
                 )
               })}

@@ -9,7 +9,7 @@ import { fmtDate } from '../fmtDate'
 
 export default function Results() {
   const { session, teams, myTeam } = useApp()
-  const ranked = finalOrder(teams)
+  const ranked = finalOrder(teams.filter((t) => t.members.length))
   const items = ranked.map((t) => ({ ...t, sub: t.finalAward != null ? `Final: ${t.finalAward} pts` : undefined, highlight: t.id === myTeam?.id }))
   return (
     <div className="pt-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-8">
